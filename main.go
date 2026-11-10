@@ -57,6 +57,18 @@ Options:
 // approximation
 const tolerance = 0.25
 
+// iconDescent is the distance in em units from the bottom of an icon's canvas
+// to the baseline. IcoMoon snaps the baseline to the icon's design grid, so
+// icons drawn on a grid that the font descent doesn't fall on sit slightly
+// higher or lower than the rest.
+func iconDescent(descent, em, grid float64) float64 {
+	if grid <= 0 {
+		return descent
+	}
+	cell := em / grid
+	return math.Floor(descent/cell+0.5) * cell
+}
+
 func glyph(icon selection.Icon, scale, ascent float64) (ttf.Glyph, error) {
 	g := ttf.Glyph{Code: icon.Code, Advance: uint16(math.Round(icon.Width * scale))}
 	area := 0
@@ -200,7 +212,7 @@ func run() error {
 		Descent:    int16(descent),
 	}
 	for _, icon := range sel.Icons {
-		g, err := glyph(icon, scale, sel.EmSize-descent)
+		g, err := glyph(icon, scale, sel.EmSize-iconDescent(descent, sel.EmSize, icon.Grid))
 		if err != nil {
 			return err
 		}

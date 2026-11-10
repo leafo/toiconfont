@@ -52,6 +52,7 @@ These fields are read, everything else is ignored:
 | `height` | `1024` |
 | `icons[].icon.paths` | |
 | `icons[].icon.width` | `height` |
+| `icons[].icon.grid` | none, the baseline is snapped to this grid |
 | `icons[].properties.name` | required, must be unique |
 | `icons[].properties.code` | required, must be unique |
 | `preferences.fontPref.prefix` | `icon-` |

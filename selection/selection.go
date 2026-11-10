@@ -11,6 +11,7 @@ type Icon struct {
 	Name  string
 	Code  rune
 	Width float64
+	Grid  float64 // design grid size, 0 if unset
 	Paths []string
 }
 
@@ -29,6 +30,7 @@ type rawFile struct {
 		Icon struct {
 			Paths []string `json:"paths"`
 			Width float64  `json:"width"`
+			Grid  float64  `json:"grid"`
 		} `json:"icon"`
 		Properties struct {
 			Name string `json:"name"`
@@ -86,7 +88,7 @@ func Read(path string) (*File, error) {
 	names := map[string]bool{}
 	codes := map[rune]string{}
 	for i, r := range raw.Icons {
-		icon := Icon{Name: r.Properties.Name, Code: r.Properties.Code, Width: r.Icon.Width, Paths: r.Icon.Paths}
+		icon := Icon{Name: r.Properties.Name, Code: r.Properties.Code, Width: r.Icon.Width, Grid: r.Icon.Grid, Paths: r.Icon.Paths}
 		if icon.Width == 0 {
 			icon.Width = f.Height
 		}
