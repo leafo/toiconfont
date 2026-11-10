@@ -25,6 +25,7 @@ toiconfont -ttf icons.ttf
 | `-css` | write the stylesheet to this file, needs `-woff2` or `-woff` |
 | `-css-woff2-url` | WOFF2 URL used in the stylesheet (default: the WOFF2 file name) |
 | `-css-url` | WOFF URL used in the stylesheet (default: the WOFF file name) |
+| `-css-font-display` | `font-display` value used in the stylesheet: `auto`, `block`, `swap`, `fallback` or `optional` |
 | `-v` | print version |
 
 ## Stylesheet
