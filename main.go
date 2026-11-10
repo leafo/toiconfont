@@ -1,4 +1,4 @@
-// Command toiconfont builds an icon font from an IcoMoon selection.json file.
+// Command toiconfont builds an icon font from an IcoMoon compatible selection.json file.
 package main
 
 import (
@@ -9,6 +9,8 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"runtime"
+	"runtime/debug"
 	"strings"
 
 	"github.com/leafo/toiconfont/selection"
@@ -16,6 +18,39 @@ import (
 	"github.com/leafo/toiconfont/ttf"
 	"github.com/leafo/toiconfont/woff"
 )
+
+// set by the Makefile via -ldflags
+var (
+	version = ""
+	commit  = "head"
+	builtAt = "unknown"
+)
+
+func versionString() string {
+	v := version
+	if v == "" {
+		v = "dev"
+		if info, ok := debug.ReadBuildInfo(); ok && info.Main.Version != "" && info.Main.Version != "(devel)" {
+			v = info.Main.Version
+		}
+	}
+	return fmt.Sprintf("toiconfont %s\n  commit: %s\n  built:  %s\n  go:     %s",
+		v, commit, builtAt, runtime.Version())
+}
+
+func usage() {
+	w := flag.CommandLine.Output()
+	fmt.Fprint(w, `Usage: toiconfont [options]
+
+Builds an icon font from an IcoMoon compatible selection.json file.
+
+Example:
+  toiconfont -in selection.json -woff icons.woff -css icons.scss
+
+Options:
+`)
+	flag.PrintDefaults()
+}
 
 // largest distance in font units between a cubic curve and its quadratic
 // approximation
@@ -101,12 +136,22 @@ func stylesheet(sel *selection.File, url string) string {
 }
 
 func run() error {
-	in := flag.String("in", "selection.json", "IcoMoon selection.json to read")
+	in := flag.String("in", "selection.json", "IcoMoon compatible selection.json file to read")
 	woffOut := flag.String("woff", "", "write the WOFF font to this file")
 	ttfOut := flag.String("ttf", "", "write the TrueType font to this file")
 	cssOut := flag.String("css", "", "write the stylesheet to this file")
 	cssURL := flag.String("css-url", "", "font URL used in the stylesheet (default: the WOFF file name)")
+	showVersion := flag.Bool("v", false, "print version")
+	flag.Usage = usage
 	flag.Parse()
+
+	if *showVersion {
+		fmt.Println(versionString())
+		return nil
+	}
+	if flag.NArg() > 0 {
+		return fmt.Errorf("unexpected argument %q, see -h", flag.Arg(0))
+	}
 
 	if *woffOut == "" && *ttfOut == "" {
 		return fmt.Errorf("nothing to do, pass -woff or -ttf")

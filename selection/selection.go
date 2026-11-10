@@ -1,4 +1,4 @@
-// Package selection reads IcoMoon selection.json files.
+// Package selection reads IcoMoon compatible selection.json files.
 package selection
 
 import (
