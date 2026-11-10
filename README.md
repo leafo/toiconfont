@@ -55,7 +55,7 @@ These fields are read, everything else is ignored:
 | `icons[].properties.name` | required, must be unique |
 | `icons[].properties.code` | required, must be unique |
 | `preferences.fontPref.prefix` | `icon-` |
-| `preferences.fontPref.metadata.fontFamily` | `icomoon` |
+| `preferences.fontPref.metadata.fontFamily` | `icons` |
 | `preferences.fontPref.metrics.emSize` | `height` |
 | `preferences.fontPref.metrics.baseline` | `6.25` |
 

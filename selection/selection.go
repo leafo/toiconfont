@@ -68,7 +68,7 @@ func Read(path string) (*File, error) {
 		Baseline: 6.25,
 	}
 	if f.Family == "" {
-		f.Family = "icomoon"
+		f.Family = "icons"
 	}
 	if f.Prefix == "" {
 		f.Prefix = "icon-"
