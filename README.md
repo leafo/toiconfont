@@ -5,11 +5,12 @@ builds an icon font from an IcoMoon compatible selection.json file
 ## Usage
 
 ```sh
-# woff + stylesheet
-toiconfont -in selection.json -woff icons.woff -css icons.css
+# woff2 + woff + stylesheet
+toiconfont -in selection.json -woff2 icons.woff2 -woff icons.woff -css icons.css
 
-# set the font URL written into the stylesheet
-toiconfont -woff static/icons.woff -css icons.css -css-url /static/icons.woff
+# set the font URLs written into the stylesheet
+toiconfont -woff2 static/icons.woff2 -woff static/icons.woff -css icons.css \
+  -css-woff2-url /static/icons.woff2 -css-url /static/icons.woff
 
 # plain TrueType
 toiconfont -ttf icons.ttf
@@ -18,10 +19,12 @@ toiconfont -ttf icons.ttf
 | Flag | |
 | --- | --- |
 | `-in` | selection.json to read (default `selection.json`) |
+| `-woff2` | write the WOFF2 font to this file |
 | `-woff` | write the WOFF font to this file |
 | `-ttf` | write the TrueType font to this file |
-| `-css` | write the stylesheet to this file, needs `-woff` |
-| `-css-url` | font URL used in the stylesheet (default: the WOFF file name) |
+| `-css` | write the stylesheet to this file, needs `-woff2` or `-woff` |
+| `-css-woff2-url` | WOFF2 URL used in the stylesheet (default: the WOFF2 file name) |
+| `-css-url` | WOFF URL used in the stylesheet (default: the WOFF file name) |
 | `-v` | print version |
 
 ## Stylesheet
@@ -35,8 +38,9 @@ and one class per icon:
 }
 ```
 
-The font URL gets a hash of the font's contents appended as a query string
-(`icons.woff?1a2b3c4d`).
+The `@font-face` rule lists the WOFF2 font first, then the WOFF font, for
+whichever of the two were written. Each font URL gets a hash of the font's
+contents appended as a query string (`icons.woff2?1a2b3c4d`).
 
 ## selection.json
 
