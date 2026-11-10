@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+          cache: false
+
+      - name: Check formatting
+        run: |
+          files=$(gofmt -l .)
+          test -z "$files" || { echo "$files"; exit 1; }
+
+      - name: Build
+        run: make build
+
+      - name: Test
+        run: go test ./...
+
+      - name: Vet
+        run: go vet ./...
